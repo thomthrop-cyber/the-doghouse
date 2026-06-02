@@ -7,9 +7,15 @@ import Image from 'next/image'
    CLIPS — add more YouTube/Vimeo links here as you shoot more.
    ============================================================ */
 const CLIPS = [
-  { embed: 'https://youtu.be/rtqqF_T932U', poster: '/assets/promo/live-02.jpg', title: "Stamp On 'Em",   cat: 'Promo',       dur: '01:42' },
-  { embed: 'https://youtu.be/oKR3poXCo70', poster: '/assets/promo/live-05.jpg', title: "Dogs Don't Die", cat: 'Music video', dur: '03:08' },
+  { embed: 'https://youtu.be/rtqqF_T932U', title: "Stamp On 'Em",   cat: 'Promo',       dur: '01:42' },
+  { embed: 'https://youtu.be/oKR3poXCo70', title: "Dogs Don't Die", cat: 'Music video', dur: '03:08' },
 ]
+
+function ytThumb(embedUrl: string) {
+  const m = embedUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
+  if (!m) return ''
+  return `https://img.youtube.com/vi/${m[1]}/maxresdefault.jpg`
+}
 
 function embedUrl(u: string) {
   const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
@@ -126,7 +132,7 @@ export default function TapeRack() {
                 onClick={() => openMonitor(i)}
               >
                 <Image
-                  src={v.poster}
+                  src={ytThumb(v.embed)}
                   alt={v.title}
                   fill
                   sizes="(max-width: 760px) 100vw, 50vw"
@@ -174,7 +180,7 @@ export default function TapeRack() {
 
             <div
               className={`screen${embed ? ' has-embed' : ''}`}
-              style={embed ? { backgroundImage: `url(${clip.poster})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+              style={embed ? { backgroundImage: `url(${ytThumb(clip.embed)})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
             >
               <button className="mon-nav mon-prev" type="button" aria-label="Previous clip" onClick={(e) => { e.stopPropagation(); step(-1) }}>←</button>
               <button className="mon-nav mon-next" type="button" aria-label="Next clip" onClick={(e) => { e.stopPropagation(); step(1) }}>→</button>
