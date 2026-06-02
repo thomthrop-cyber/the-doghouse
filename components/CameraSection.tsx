@@ -77,7 +77,7 @@ export default function CameraSection() {
           {/* @ts-expect-error model-viewer is a web component loaded via CDN */}
           <model-viewer
             id="camModel"
-            src="/Camcorder.glb"
+            src="/camera-scan.glb"
             camera-controls
             auto-rotate
             touch-action="pan-y"
