@@ -7,8 +7,8 @@ import Image from 'next/image'
    CLIPS — add more YouTube/Vimeo links here as you shoot more.
    ============================================================ */
 const CLIPS = [
-  { embed: 'https://youtu.be/rtqqF_T932U', title: "Stamp On 'Em",   cat: 'Promo',       dur: '01:42' },
-  { embed: 'https://youtu.be/oKR3poXCo70', title: "Dogs Don't Die", cat: 'Music video', dur: '03:08' },
+  { embed: 'https://youtu.be/rtqqF_T932U', title: 'Napoleon', cat: 'Promo',       dur: '01:42' },
+  { embed: 'https://youtu.be/oKR3poXCo70', title: 'MASK 22',  cat: 'Music video', dur: '03:08' },
 ]
 
 function ytThumb(embedUrl: string) {
@@ -113,8 +113,8 @@ export default function TapeRack() {
           <p className="eyebrow">The Doghouse · In-house video &amp; visuals</p>
           <h1 className="poster">The tape <span className="hl">rack.</span></h1>
           <p className="lead">
-            Everything we&apos;ve pointed a camera at — promos, music videos, documentation,
-            live sets. Pick a tape to roll it.
+            Every frame shot, every track recorded, every visual crafted — fully
+            in-house. <strong>The music and the visuals are ours, start to finish.</strong> Pick a tape to roll it.
           </p>
         </div>
       </section>
