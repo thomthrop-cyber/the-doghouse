@@ -4,57 +4,58 @@ import { useEffect, useRef } from 'react'
 
 export default function CameraSection() {
   const stageRef = useRef<HTMLAnchorElement>(null)
-  const modelRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
 
-    modelRef.current = stage.querySelector('model-viewer')
+    // Wait for model-viewer custom element to be defined
+    customElements.whenDefined('model-viewer').then(() => {
+      const mv = stage.querySelector('model-viewer') as any
+      if (!mv) return
 
-    // Start rotating on hover, stop when mouse leaves
-    const onEnter = () => {
-      modelRef.current?.setAttribute('auto-rotate', '')
-    }
-    const onLeave = () => {
-      modelRef.current?.removeAttribute('auto-rotate')
-    }
+      // Lerped camera state
+      let targetTheta = 0     // left ↔ right rotation (degrees)
+      let targetPhi   = 82    // up ↕ down elevation (degrees, 90 = equator)
+      let currTheta   = 0
+      let currPhi     = 82
+      let rafId: number
 
-    // Prevent link navigation when user was dragging to orbit
-    let startX = 0, startY = 0, dragging = false
-    const onDown = (e: MouseEvent | TouchEvent) => {
-      const point = 'touches' in e ? e.touches[0] : e
-      startX = point.clientX
-      startY = point.clientY
-      dragging = false
-    }
-    const onMove = (e: MouseEvent | TouchEvent) => {
-      const point = 'touches' in e ? e.touches[0] : e
-      if (Math.abs(point.clientX - startX) > 4 || Math.abs(point.clientY - startY) > 4) {
-        dragging = true
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+
+      const tick = () => {
+        currTheta = lerp(currTheta, targetTheta, 0.055)
+        currPhi   = lerp(currPhi,   targetPhi,   0.055)
+        mv.cameraOrbit = `${currTheta.toFixed(3)}deg ${currPhi.toFixed(3)}deg auto`
+        rafId = requestAnimationFrame(tick)
       }
-    }
-    const onClick = (e: MouseEvent) => {
-      if (dragging) e.preventDefault()
-    }
 
-    stage.addEventListener('mouseenter', onEnter)
-    stage.addEventListener('mouseleave', onLeave)
-    stage.addEventListener('mousedown', onDown)
-    stage.addEventListener('mousemove', onMove)
-    stage.addEventListener('click', onClick)
-    stage.addEventListener('touchstart', onDown, { passive: true })
-    stage.addEventListener('touchmove', onMove, { passive: true })
+      // Start loop immediately so the return-to-centre after hover is smooth
+      rafId = requestAnimationFrame(tick)
 
-    return () => {
-      stage.removeEventListener('mouseenter', onEnter)
-      stage.removeEventListener('mouseleave', onLeave)
-      stage.removeEventListener('mousedown', onDown)
-      stage.removeEventListener('mousemove', onMove)
-      stage.removeEventListener('click', onClick)
-      stage.removeEventListener('touchstart', onDown)
-      stage.removeEventListener('touchmove', onMove)
-    }
+      const onMove = (e: MouseEvent) => {
+        const r = stage.getBoundingClientRect()
+        const x = (e.clientX - r.left)  / r.width   // 0 → 1
+        const y = (e.clientY - r.top)   / r.height  // 0 → 1
+        targetTheta = (x - 0.5) * 70   // ±35 deg horizontal
+        targetPhi   = 82 + (y - 0.5) * 28 // 68–96 deg vertical
+      }
+
+      const onLeave = () => {
+        // Drift back to front-facing centre
+        targetTheta = 0
+        targetPhi   = 82
+      }
+
+      stage.addEventListener('mousemove', onMove)
+      stage.addEventListener('mouseleave', onLeave)
+
+      return () => {
+        cancelAnimationFrame(rafId)
+        stage.removeEventListener('mousemove', onMove)
+        stage.removeEventListener('mouseleave', onLeave)
+      }
+    })
   }, [])
 
   return (
@@ -74,8 +75,8 @@ export default function CameraSection() {
             </h2>
           </div>
           <p className="rt" data-reveal style={{ ['--rd' as string]: '200ms' }}>
-            Our custom Sony DCR-HC24E, photo-scanned in 3D. Drag to orbit it —
-            then click to roll the video portfolio.
+            Our custom Sony DCR-HC24E, photo-scanned in 3D. Move your mouse over
+            it — then click to roll the video portfolio.
           </p>
         </div>
 
@@ -93,19 +94,15 @@ export default function CameraSection() {
           <model-viewer
             id="camModel"
             src="/camera-scan.glb"
-            camera-controls
-            touch-action="pan-y"
-            rotation-per-second="22deg"
             interaction-prompt="none"
             shadow-intensity="0"
             exposure="1.1"
-            disable-zoom
-            style={{ width: '100%', height: '100%', background: 'transparent' }}
+            style={{ width: '100%', height: '100%', background: 'transparent', pointerEvents: 'none' }}
           />
           <div className="cam-hud">
             <span className="t mono">DCR-HC24E</span>
             <span className="r mono">● 3D SCAN</span>
-            <span className="drag-hint mono">⟲ drag to orbit</span>
+            <span className="drag-hint mono">⟵ move mouse to orbit</span>
           </div>
           <span className="cam-cta mono">▶ Click to enter the video portfolio</span>
         </a>
