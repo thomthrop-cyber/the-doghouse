@@ -14,46 +14,49 @@ export default function CameraSection() {
       const mv = stage.querySelector('model-viewer') as any
       if (!mv) return
 
-      // Lerped camera state
-      let targetTheta = 0     // left ↔ right rotation (degrees)
-      let targetPhi   = 82    // up ↕ down elevation (degrees, 90 = equator)
+      // Accumulated rotation — no limits on theta so full 360+ is possible
+      let targetTheta = 0
+      let targetPhi   = 82    // clamped 30–130 so it doesn't flip upside down
       let currTheta   = 0
       let currPhi     = 82
+      let lastX       = 0
+      let lastY       = 0
       let rafId: number
 
       const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
       const tick = () => {
-        currTheta = lerp(currTheta, targetTheta, 0.055)
-        currPhi   = lerp(currPhi,   targetPhi,   0.055)
+        currTheta = lerp(currTheta, targetTheta, 0.18)
+        currPhi   = lerp(currPhi,   targetPhi,   0.18)
         mv.cameraOrbit = `${currTheta.toFixed(3)}deg ${currPhi.toFixed(3)}deg auto`
         rafId = requestAnimationFrame(tick)
       }
 
-      // Start loop immediately so the return-to-centre after hover is smooth
       rafId = requestAnimationFrame(tick)
 
+      const onEnter = (e: MouseEvent) => {
+        // Seed last position so first move doesn't jump
+        lastX = e.clientX
+        lastY = e.clientY
+      }
+
       const onMove = (e: MouseEvent) => {
-        const r = stage.getBoundingClientRect()
-        const x = (e.clientX - r.left)  / r.width   // 0 → 1
-        const y = (e.clientY - r.top)   / r.height  // 0 → 1
-        targetTheta = (x - 0.5) * 70   // ±35 deg horizontal
-        targetPhi   = 82 + (y - 0.5) * 28 // 68–96 deg vertical
+        const dx = e.clientX - lastX
+        const dy = e.clientY - lastY
+        lastX = e.clientX
+        lastY = e.clientY
+
+        targetTheta += dx * 0.65                                      // fast horizontal — full 360 easy
+        targetPhi    = Math.max(30, Math.min(130, targetPhi + dy * 0.35)) // vertical clamped
       }
 
-      const onLeave = () => {
-        // Drift back to front-facing centre
-        targetTheta = 0
-        targetPhi   = 82
-      }
-
+      stage.addEventListener('mouseenter', onEnter)
       stage.addEventListener('mousemove', onMove)
-      stage.addEventListener('mouseleave', onLeave)
 
       return () => {
         cancelAnimationFrame(rafId)
+        stage.removeEventListener('mouseenter', onEnter)
         stage.removeEventListener('mousemove', onMove)
-        stage.removeEventListener('mouseleave', onLeave)
       }
     })
   }, [])
@@ -102,7 +105,7 @@ export default function CameraSection() {
           <div className="cam-hud">
             <span className="t mono">DCR-HC24E</span>
             <span className="r mono">● 3D SCAN</span>
-            <span className="drag-hint mono">⟵ move mouse to orbit</span>
+            <span className="drag-hint mono">⟵ move to orbit</span>
           </div>
           <span className="cam-cta mono">▶ Click to enter the video portfolio</span>
         </a>
