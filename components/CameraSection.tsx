@@ -77,7 +77,7 @@ export default function CameraSection() {
           {/* @ts-expect-error model-viewer is a web component loaded via CDN */}
           <model-viewer
             id="camModel"
-            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/AntiqueCamera/glTF-Binary/AntiqueCamera.glb"
+            src="/Camcorder.glb"
             camera-controls
             auto-rotate
             touch-action="pan-y"
