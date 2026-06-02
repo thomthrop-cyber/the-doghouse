@@ -69,7 +69,7 @@ export default function CameraSection() {
           id="camStage"
           data-reveal
           style={{ ['--rd' as string]: '120ms' }}
-          href="#"
+          href="/portfolio"
           aria-label="Open the video portfolio"
           ref={stageRef}
         >

@@ -1,0 +1,27 @@
+import type { Metadata } from 'next'
+import AnalogOverlays from '@/components/AnalogOverlays'
+import CamcorderHUD from '@/components/CamcorderHUD'
+import ThemeSwitcher from '@/components/ThemeSwitcher'
+import PortfolioNav from '@/components/PortfolioNav'
+import TapeRack from '@/components/TapeRack'
+import Footer from '@/components/Footer'
+
+export const metadata: Metadata = {
+  title: 'The Doghouse — The tape rack · Video portfolio',
+  description: 'Everything we\'ve pointed a camera at — promos, music videos, documentation, live sets.',
+}
+
+export default function PortfolioPage() {
+  return (
+    <>
+      <AnalogOverlays />
+      <CamcorderHUD />
+      <ThemeSwitcher />
+      <PortfolioNav />
+      <main id="top">
+        <TapeRack />
+        <Footer />
+      </main>
+    </>
+  )
+}

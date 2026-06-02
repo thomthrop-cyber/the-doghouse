@@ -8,7 +8,7 @@ export default function Nav() {
         </a>
         <nav className="nav-links">
           <a href="#camera">The camera</a>
-          <a href="#">Portfolio</a>
+          <a href="/portfolio">Portfolio</a>
         </nav>
         <a className="cross" href="#">
           Thom Throp · Music ↗
