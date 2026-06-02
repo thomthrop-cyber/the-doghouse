@@ -14,7 +14,7 @@ const CLIPS = [
 function ytThumb(embedUrl: string) {
   const m = embedUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
   if (!m) return ''
-  return `https://img.youtube.com/vi/${m[1]}/maxresdefault.jpg`
+  return `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`
 }
 
 function embedUrl(u: string) {
