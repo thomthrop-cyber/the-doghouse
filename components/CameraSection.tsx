@@ -4,13 +4,24 @@ import { useEffect, useRef } from 'react'
 
 export default function CameraSection() {
   const stageRef = useRef<HTMLAnchorElement>(null)
+  const modelRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    // Prevent navigation on model-viewer drag
     const stage = stageRef.current
     if (!stage) return
-    let startX = 0, startY = 0, dragging = false
 
+    modelRef.current = stage.querySelector('model-viewer')
+
+    // Start rotating on hover, stop when mouse leaves
+    const onEnter = () => {
+      modelRef.current?.setAttribute('auto-rotate', '')
+    }
+    const onLeave = () => {
+      modelRef.current?.removeAttribute('auto-rotate')
+    }
+
+    // Prevent link navigation when user was dragging to orbit
+    let startX = 0, startY = 0, dragging = false
     const onDown = (e: MouseEvent | TouchEvent) => {
       const point = 'touches' in e ? e.touches[0] : e
       startX = point.clientX
@@ -27,6 +38,8 @@ export default function CameraSection() {
       if (dragging) e.preventDefault()
     }
 
+    stage.addEventListener('mouseenter', onEnter)
+    stage.addEventListener('mouseleave', onLeave)
     stage.addEventListener('mousedown', onDown)
     stage.addEventListener('mousemove', onMove)
     stage.addEventListener('click', onClick)
@@ -34,6 +47,8 @@ export default function CameraSection() {
     stage.addEventListener('touchmove', onMove, { passive: true })
 
     return () => {
+      stage.removeEventListener('mouseenter', onEnter)
+      stage.removeEventListener('mouseleave', onLeave)
       stage.removeEventListener('mousedown', onDown)
       stage.removeEventListener('mousemove', onMove)
       stage.removeEventListener('click', onClick)
@@ -79,9 +94,7 @@ export default function CameraSection() {
             id="camModel"
             src="/camera-scan.glb"
             camera-controls
-            auto-rotate
             touch-action="pan-y"
-            auto-rotate-delay="600"
             rotation-per-second="22deg"
             interaction-prompt="none"
             shadow-intensity="0"
@@ -92,7 +105,6 @@ export default function CameraSection() {
           <div className="cam-hud">
             <span className="t mono">DCR-HC24E</span>
             <span className="r mono">● 3D SCAN</span>
-            <span className="b mono">YOUR PHOTOSCAN DROPS IN HERE</span>
             <span className="drag-hint mono">⟲ drag to orbit</span>
           </div>
           <span className="cam-cta mono">▶ Click to enter the video portfolio</span>
