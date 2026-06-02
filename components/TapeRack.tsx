@@ -4,24 +4,14 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 /* ============================================================
-   CLIPS — add your YouTube/Vimeo links into `embed`.
-   Leave embed blank for a "Standby" tape (shows poster only).
+   CLIPS — add more YouTube/Vimeo links here as you shoot more.
    ============================================================ */
 const CLIPS = [
-  { embed: 'https://youtu.be/rtqqF_T932U', src: '', poster: '/assets/promo/live-02.jpg', title: "Stamp On 'Em",   cat: 'Promo',       dur: '01:42' },
-  { embed: 'https://youtu.be/oKR3poXCo70', src: '', poster: '/assets/promo/live-05.jpg', title: "Dogs Don't Die", cat: 'Music video', dur: '03:08' },
-  { embed: '',                              src: '', poster: '/assets/promo/live-06.jpg', title: 'The Doghouse',   cat: 'Doc',         dur: '06:21' },
-  { embed: '',                              src: '', poster: '/assets/promo/live-03.jpg', title: 'Closing Set',    cat: 'Live',        dur: '04:55' },
-  { embed: '',                              src: '', poster: '/assets/promo/live-01.jpg', title: 'Nightshift',     cat: 'Live',        dur: '02:37' },
-  { embed: '',                              src: '', poster: '/assets/promo/live-04.jpg', title: 'Feedback',       cat: 'Music video', dur: '02:14' },
-  { embed: '',                              src: '', poster: '/assets/promo/thom-studio.jpeg', title: 'In The Room', cat: 'Doc',       dur: '05:09' },
+  { embed: 'https://youtu.be/rtqqF_T932U', poster: '/assets/promo/live-02.jpg', title: "Stamp On 'Em",   cat: 'Promo',       dur: '01:42' },
+  { embed: 'https://youtu.be/oKR3poXCo70', poster: '/assets/promo/live-05.jpg', title: "Dogs Don't Die", cat: 'Music video', dur: '03:08' },
 ]
 
-const CATS = ['All', 'Promo', 'Music video', 'Doc', 'Live']
-
 function embedUrl(u: string) {
-  if (!u) return ''
-  u = u.trim()
   const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
   if (yt) return `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1`
   const vi = u.match(/vimeo\.com\/(?:video\/)?(\d+)/)
@@ -30,8 +20,6 @@ function embedUrl(u: string) {
 }
 
 function watchUrl(u: string) {
-  if (!u) return ''
-  u = u.trim()
   const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
   if (yt) return `https://www.youtube.com/watch?v=${yt[1]}`
   const vi = u.match(/vimeo\.com\/(?:video\/)?(\d+)/)
@@ -39,21 +27,9 @@ function watchUrl(u: string) {
   return u
 }
 
-function tc(i: number) {
-  const s = (i * 17) % 60
-  const m = 11 + i * 6
-  const f = (i * 7) % 25
-  return `00:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}:${String(f).padStart(2,'0')}`
-}
-
 export default function TapeRack() {
-  const [activeCat, setActiveCat] = useState('All')
   const [monitor, setMonitor] = useState<{ open: boolean; index: number }>({ open: false, index: 0 })
   const monTcRef = useRef<HTMLSpanElement>(null)
-
-  const visibleIndices = CLIPS
-    .map((_, i) => i)
-    .filter((i) => activeCat === 'All' || CLIPS[i].cat === activeCat)
 
   function openMonitor(i: number) {
     setMonitor({ open: true, index: i })
@@ -66,14 +42,13 @@ export default function TapeRack() {
   }
 
   function step(dir: number) {
-    setMonitor((m) => {
-      const pos = visibleIndices.indexOf(m.index)
-      const next = visibleIndices[(pos + dir + visibleIndices.length) % visibleIndices.length]
-      return { open: true, index: next }
-    })
+    setMonitor((m) => ({
+      open: true,
+      index: (m.index + dir + CLIPS.length) % CLIPS.length,
+    }))
   }
 
-  // Keyboard nav for monitor
+  // Keyboard nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!monitor.open) return
@@ -83,7 +58,7 @@ export default function TapeRack() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [monitor.open, activeCat])
+  }, [monitor.open])
 
   // Running timecode in monitor OSD
   useEffect(() => {
@@ -101,27 +76,19 @@ export default function TapeRack() {
     return () => clearInterval(id)
   }, [monitor.open])
 
-  // Tape reveal animation
+  // GSAP entrance
   useEffect(() => {
     async function animate() {
       const { gsap } = await import('gsap')
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-      gsap.registerPlugin(ScrollTrigger)
 
-      gsap.fromTo('.rack-head h1', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.9, ease: 'power4.out', delay: 0.2 })
       gsap.fromTo('.rack-head .eyebrow', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.1, ease: 'power3.out' })
-      gsap.fromTo('.rack-head .lead', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.35, ease: 'power3.out' })
-      gsap.fromTo('.filters', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.5, ease: 'power3.out' })
+      gsap.fromTo('.rack-head h1',       { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.9, delay: 0.2, ease: 'power4.out' })
+      gsap.fromTo('.rack-head .lead',    { opacity: 0, y: 20 },  { opacity: 1, y: 0, duration: 0.7, delay: 0.38, ease: 'power3.out' })
 
       gsap.utils.toArray<HTMLElement>('.tape').forEach((tape, i) => {
-        gsap.fromTo(
-          tape,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
-            delay: (i % 3) * 0.08,
-            scrollTrigger: { trigger: tape, start: 'top 90%', once: true },
-          }
+        gsap.fromTo(tape,
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.8, delay: 0.5 + i * 0.15, ease: 'power3.out' }
         )
       })
     }
@@ -131,7 +98,6 @@ export default function TapeRack() {
   const clip = CLIPS[monitor.index]
   const embed = embedUrl(clip?.embed ?? '')
   const watch = watchUrl(clip?.embed ?? '')
-  const posInView = visibleIndices.indexOf(monitor.index)
 
   return (
     <>
@@ -144,54 +110,37 @@ export default function TapeRack() {
             Everything we&apos;ve pointed a camera at — promos, music videos, documentation,
             live sets. Pick a tape to roll it.
           </p>
-          <div className="filters" role="group" aria-label="Filter clips by type">
-            {CATS.map((cat) => {
-              const count = cat === 'All' ? CLIPS.length : CLIPS.filter((c) => c.cat === cat).length
-              return (
-                <button
-                  key={cat}
-                  className="chip"
-                  type="button"
-                  aria-pressed={activeCat === cat ? 'true' : 'false'}
-                  onClick={() => setActiveCat(cat)}
-                >
-                  {cat}<span className="n">{String(count).padStart(2,'0')}</span>
-                </button>
-              )
-            })}
-          </div>
         </div>
       </section>
 
-      {/* ── Tape grid ── */}
+      {/* ── Two-up tape layout ── */}
       <section className="rack">
         <div className="wrap">
-          <div className="rack-grid">
-            {CLIPS.map((v, i) => {
-              const hidden = activeCat !== 'All' && v.cat !== activeCat
-              return (
-                <button
-                  key={i}
-                  className={`tape${hidden ? ' is-hidden' : ''}`}
-                  type="button"
-                  aria-label={`Play ${v.title}`}
-                  onClick={() => openMonitor(i)}
-                >
-                  <Image src={v.poster} alt={v.title} fill sizes="(max-width:560px) 100vw, (max-width:920px) 50vw, 33vw" loading="lazy" />
-                  <span className="t-cat">{v.cat}</span>
-                  <span className="t-tc">{tc(i)}</span>
-                  <span className="t-play" />
-                  <span className="t-foot">
-                    <span className="t-title">{v.title}</span>
-                    <span className="t-dur">⌗ {v.dur}</span>
-                  </span>
-                </button>
-              )
-            })}
+          <div className="rack-duo">
+            {CLIPS.map((v, i) => (
+              <button
+                key={i}
+                className="tape tape-duo"
+                type="button"
+                aria-label={`Play ${v.title}`}
+                onClick={() => openMonitor(i)}
+              >
+                <Image
+                  src={v.poster}
+                  alt={v.title}
+                  fill
+                  sizes="(max-width: 760px) 100vw, 50vw"
+                  priority={i === 0}
+                />
+                <span className="t-cat">{v.cat}</span>
+                <span className="t-play" />
+                <span className="t-foot">
+                  <span className="t-title">{v.title}</span>
+                  <span className="t-dur">⌗ {v.dur}</span>
+                </span>
+              </button>
+            ))}
           </div>
-          {visibleIndices.length === 0 && (
-            <p className="rack-empty show">// NO TAPES IN THIS BIN —</p>
-          )}
         </div>
       </section>
 
@@ -223,28 +172,20 @@ export default function TapeRack() {
               </div>
             </div>
 
-            <div className={`screen${embed ? ' has-embed' : ''}`}
-                 style={embed ? { backgroundImage: `url(${clip.poster})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+            <div
+              className={`screen${embed ? ' has-embed' : ''}`}
+              style={embed ? { backgroundImage: `url(${clip.poster})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+            >
               <button className="mon-nav mon-prev" type="button" aria-label="Previous clip" onClick={(e) => { e.stopPropagation(); step(-1) }}>←</button>
               <button className="mon-nav mon-next" type="button" aria-label="Next clip" onClick={(e) => { e.stopPropagation(); step(1) }}>→</button>
 
-              {embed ? (
+              {embed && (
                 <iframe
                   src={embed}
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen
                   title={clip.title}
                 />
-              ) : clip.src ? (
-                <video src={clip.src} poster={clip.poster} controls autoPlay playsInline />
-              ) : (
-                <>
-                  <img className="poster" src={clip.poster} alt={clip.title} />
-                  <div className="standby">
-                    <div className="big-play" />
-                    <div className="sb-note">Standby · footage drops in here</div>
-                  </div>
-                </>
               )}
 
               <div className="osd">
@@ -256,10 +197,8 @@ export default function TapeRack() {
             </div>
 
             <div className="mon-bar">
-              <span className="mon-count">
-                {String(posInView + 1).padStart(2,'0')} / {String(visibleIndices.length).padStart(2,'0')}
-              </span>
-              <div className="mon-prog"><i /></div>
+              <span className="mon-count">{String(monitor.index + 1).padStart(2,'0')} / {String(CLIPS.length).padStart(2,'0')}</span>
+              <div className="mon-prog"><i style={{ width: `${((monitor.index + 1) / CLIPS.length) * 100}%` }} /></div>
               <span className="mon-count">{clip.dur}</span>
             </div>
           </div>
