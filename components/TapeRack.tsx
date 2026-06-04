@@ -4,12 +4,52 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 /* ============================================================
-   CLIPS — add more YouTube/Vimeo links here as you shoot more.
+   CLIPS — add YouTube links and credits here as you shoot more.
+   Fill in any credit field below — leave blank ('') to hide it.
    ============================================================ */
 const CLIPS = [
-  { embed: 'https://youtu.be/rtqqF_T932U', title: 'Napoleon',                       cat: 'Promo',       dur: '01:42' },
-  { embed: 'https://youtu.be/oKR3poXCo70', title: 'MASK 22',                        cat: 'Music video', dur: '03:08' },
-  { embed: 'https://youtu.be/XARE4CexJ5c', title: 'Dandelion Fields Under Neon Lights', cat: 'Music video', dur: '—'    },
+  {
+    embed: 'https://youtu.be/rtqqF_T932U',
+    title: 'Napoleon',
+    cat: 'Promo',
+    dur: '01:42',
+    credits: {
+      'Director':                 '',
+      'Director of Photography':  '',
+      'Editor':                   '',
+      'Music by':                 '',
+      'Produced by':              '',
+      'Label':                    '',
+    },
+  },
+  {
+    embed: 'https://youtu.be/oKR3poXCo70',
+    title: 'MASK 22',
+    cat: 'Music video',
+    dur: '03:08',
+    credits: {
+      'Director':                 '',
+      'Director of Photography':  '',
+      'Editor':                   '',
+      'Music by':                 '',
+      'Produced by':              '',
+      'Label':                    '',
+    },
+  },
+  {
+    embed: 'https://youtu.be/XARE4CexJ5c',
+    title: 'Dandelion Fields Under Neon Lights',
+    cat: 'Music video',
+    dur: '—',
+    credits: {
+      'Director':                 '',
+      'Director of Photography':  '',
+      'Editor':                   '',
+      'Music by':                 '',
+      'Produced by':              '',
+      'Label':                    '',
+    },
+  },
 ]
 
 function ytThumb(embedUrl: string) {
@@ -146,6 +186,31 @@ export default function TapeRack() {
                   <span className="t-dur">⌗ {v.dur}</span>
                 </span>
               </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Credits ── */}
+      <section className="credits-section">
+        <div className="wrap">
+          <p className="kicker" style={{ marginBottom: '40px' }}>[ Credits ]</p>
+          <div className="credits-grid">
+            {CLIPS.map((v, i) => (
+              <div key={i} className="credits-block">
+                <div className="credits-title">
+                  <span className="credits-num mono">0{i + 1}</span>
+                  <h3 className="poster">{v.title}</h3>
+                </div>
+                <dl className="credits-list">
+                  {Object.entries(v.credits).map(([role, name]) => (
+                    <div key={role} className="credits-row">
+                      <dt className="mono">{role}</dt>
+                      <dd>{name || '—'}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             ))}
           </div>
         </div>
