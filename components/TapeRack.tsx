@@ -7,8 +7,9 @@ import Image from 'next/image'
    CLIPS — add more YouTube/Vimeo links here as you shoot more.
    ============================================================ */
 const CLIPS = [
-  { embed: 'https://youtu.be/rtqqF_T932U', title: 'Napoleon', cat: 'Promo',       dur: '01:42' },
-  { embed: 'https://youtu.be/oKR3poXCo70', title: 'MASK 22',  cat: 'Music video', dur: '03:08' },
+  { embed: 'https://youtu.be/rtqqF_T932U', title: 'Napoleon',                       cat: 'Promo',       dur: '01:42' },
+  { embed: 'https://youtu.be/oKR3poXCo70', title: 'MASK 22',                        cat: 'Music video', dur: '03:08' },
+  { embed: 'https://youtu.be/XARE4CexJ5c', title: 'Dandelion Fields Under Neon Lights', cat: 'Music video', dur: '—'    },
 ]
 
 function ytThumb(embedUrl: string) {
