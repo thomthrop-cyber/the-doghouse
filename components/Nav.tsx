@@ -4,7 +4,7 @@ export default function Nav() {
       <div className="wrap nav-in">
         <a className="brand" href="#top">
           <span className="mark" aria-hidden="true" />
-          The Doghouse
+          Dog House
         </a>
         <nav className="nav-links">
           <a href="#camera">The camera</a>

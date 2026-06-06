@@ -16,13 +16,13 @@ export default function Footer() {
         <div
           className="foot-word glitch"
           data-reveal="wipe"
-          data-text="DOGHOUSE"
+          data-text="DOG HOUSE"
         >
-          DOGHOUSE
+          DOG HOUSE
         </div>
         <div className="foot-row" data-reveal style={{ ['--rd' as string]: '120ms' }}>
           <span>
-            © {year} The Doghouse — visual promotion &amp; independent label
+            © {year} Dog House — visual promotion &amp; independent label
           </span>
           <div className="foot-social">
             <a href="https://instagram.com/thom.o_o/" target="_blank" rel="noopener">

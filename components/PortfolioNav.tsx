@@ -6,7 +6,7 @@ export default function PortfolioNav() {
       <div className="wrap nav-in">
         <Link className="brand" href="/">
           <span className="mark" aria-hidden="true" />
-          The Doghouse
+          Dog House
         </Link>
         <nav className="nav-links">
           <Link href="/#camera">The camera</Link>

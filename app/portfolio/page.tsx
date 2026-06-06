@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 import ThemeSet from '@/components/ThemeSet'
 
 export const metadata: Metadata = {
-  title: 'The Doghouse — The tape rack · Video portfolio',
+  title: 'Dog House — The tape rack · Video portfolio',
   description: 'Everything we\'ve pointed a camera at — promos, music videos, documentation, live sets.',
 }
 

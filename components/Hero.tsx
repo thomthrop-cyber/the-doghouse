@@ -4,16 +4,16 @@ export default function Hero() {
       <div className="hero-bg empty" id="heroBg" />
       <div className="wrap hero-in">
         <div className="eyebrow" data-reveal style={{ ['--rd' as string]: '0ms' }}>
-          Visual promotion · Independent label · Est. The Doghouse
+          Visual promotion · Independent label · Est. Dog House
         </div>
         <h1
           className="poster glitch"
           data-reveal="wipe"
           style={{ ['--rd' as string]: '80ms' }}
-          data-text={'THE\nDOGHOUSE'}
+          data-text={'DOG\nHOUSE'}
         >
-          THE<br />
-          <span className="l2">DOGHOUSE</span>
+          DOG<br />
+          <span className="l2">HOUSE</span>
         </h1>
         <div className="hero-sub" data-reveal style={{ ['--rd' as string]: '220ms' }}>
           <p>

@@ -151,7 +151,7 @@ export default function TapeRack() {
       {/* ── Header ── */}
       <section className="rack-head">
         <div className="wrap">
-          <p className="eyebrow">The Doghouse · In-house video &amp; visuals</p>
+          <p className="eyebrow">Dog House · In-house video &amp; visuals</p>
           <h1 className="poster">The tape <span className="hl">rack.</span></h1>
           <p className="lead">
             Every frame shot, every track recorded, every visual crafted — fully
@@ -186,31 +186,6 @@ export default function TapeRack() {
                   <span className="t-dur">⌗ {v.dur}</span>
                 </span>
               </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Credits ── */}
-      <section className="credits-section">
-        <div className="wrap">
-          <p className="kicker" style={{ marginBottom: '40px' }}>[ Credits ]</p>
-          <div className="credits-grid">
-            {CLIPS.map((v, i) => (
-              <div key={i} className="credits-block">
-                <div className="credits-title">
-                  <span className="credits-num mono">0{i + 1}</span>
-                  <h3 className="poster">{v.title}</h3>
-                </div>
-                <dl className="credits-list">
-                  {Object.entries(v.credits).map(([role, name]) => (
-                    <div key={role} className="credits-row">
-                      <dt className="mono">{role}</dt>
-                      <dd>{name || '—'}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
             ))}
           </div>
         </div>
@@ -273,6 +248,15 @@ export default function TapeRack() {
               <div className="mon-prog"><i style={{ width: `${((monitor.index + 1) / CLIPS.length) * 100}%` }} /></div>
               <span className="mon-count">{clip.dur}</span>
             </div>
+
+            <dl className="mon-credits">
+              {Object.entries(clip.credits).map(([role, name]) => (
+                <div key={role} className="mon-credits-row">
+                  <dt className="mon-credits-role">{role}</dt>
+                  <dd className="mon-credits-name">{name || '—'}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       )}

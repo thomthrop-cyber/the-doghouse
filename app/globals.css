@@ -627,76 +627,34 @@ a { color: inherit; text-decoration: none; }
 .mon-next { right: -8px; }
 @media (max-width: 760px) { .mon-prev { left: 4px; } .mon-next { right: 4px; } }
 
-/* ---------- credits ---------- */
-.credits-section {
-  background: var(--bg);
-  border-top: 2px solid color-mix(in srgb, var(--paper) 20%, transparent);
-  padding: clamp(60px, 9vw, 120px) 0;
-}
-.credits-grid {
+/* ---------- modal credits ---------- */
+.mon-credits {
+  margin: 16px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  border: 2px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 24px;
 }
-@media (max-width: 900px) { .credits-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .credits-grid { grid-template-columns: 1fr; } }
-
-.credits-block {
-  padding: 32px 28px 36px;
-  border-right: 2px solid color-mix(in srgb, var(--paper) 20%, transparent);
-}
-.credits-block:last-child { border-right: 0; }
-@media (max-width: 900px) {
-  .credits-block:nth-child(2n) { border-right: 0; }
-  .credits-block { border-bottom: 2px solid color-mix(in srgb, var(--paper) 20%, transparent); }
-  .credits-block:last-child { border-bottom: 0; }
-}
-
-.credits-title {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid color-mix(in srgb, var(--paper) 20%, transparent);
-}
-.credits-num {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--red);
-  opacity: 0.8;
-}
-.credits-block h3 {
-  font-size: clamp(22px, 2.2vw, 32px);
-  color: var(--paper);
-  margin: 0;
-}
-
-.credits-list {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.credits-row {
+.mon-credits-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  gap: 8px;
 }
-.credits-row dt {
-  font-size: 10px;
+.mon-credits-role {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: color-mix(in srgb, var(--paper) 50%, transparent);
+  color: color-mix(in srgb, var(--paper) 45%, transparent);
   white-space: nowrap;
 }
-.credits-row dd {
+.mon-credits-name {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
-  color: color-mix(in srgb, var(--paper) 80%, transparent);
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
   text-align: right;
 }
+@media (max-width: 560px) { .mon-credits { grid-template-columns: 1fr; } }

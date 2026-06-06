@@ -14,8 +14,7 @@ export default function Manifesto() {
           <span className="hl">scenes</span>, on camera, then put them back into the room.
         </h2>
         <p className="m-note" data-reveal style={{ ['--rd' as string]: '240ms' }}>
-          Popularity propagates popularity — but views are shallow on their own. The
-          Doghouse converts online attention into localised support for artists,
+          Popularity propagates popularity — but views are shallow on their own. Dog House converts online attention into localised support for artists,
           communities and the arts. Documentation gives the work weight; the work
           gives the community a reason to show up.
         </p>

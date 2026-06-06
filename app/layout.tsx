@@ -28,8 +28,17 @@ const vt323 = VT323({
 })
 
 export const metadata: Metadata = {
-  title: 'The Doghouse — A label through the lens of a camera',
+  title: 'Dog House — A label through the lens of a camera',
   description: 'Visual promotion, independent label, and in-house shooting. We market artists through visual promotion, release the music, and shoot it all in-house.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Dog House',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
