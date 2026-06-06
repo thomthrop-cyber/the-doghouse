@@ -60,7 +60,7 @@ function ytThumb(embedUrl: string) {
 
 function embedUrl(u: string) {
   const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)
-  if (yt) return `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1`
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1&hd=1&vq=hd1080`
   const vi = u.match(/vimeo\.com\/(?:video\/)?(\d+)/)
   if (vi) return `https://player.vimeo.com/video/${vi[1]}?autoplay=1`
   return u
